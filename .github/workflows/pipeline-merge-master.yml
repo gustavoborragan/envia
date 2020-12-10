@@ -3,7 +3,7 @@ name: Pipeline de merge
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   pipeline:
