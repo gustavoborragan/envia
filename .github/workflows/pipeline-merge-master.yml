@@ -1,0 +1,34 @@
+name: Pipeline de merge
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  pipeline:
+    env:
+      entorno: 'dev'
+      servicio: 'test'
+      repositorio_estado: 'gustavoborragan/envia'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Prueba
+        run: |
+                echo "foo"
+
+      - name: "Dispatch a deploy-test event"
+        run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.REPO_STATE_TOKEN }}" \
+            --request POST \
+            --data '{
+              "event_type": "prueba-a", 
+              "client_payload": {
+                "entorno": "${{ env.entorno }}",
+                "servicio": "${{ env.servicio }}",
+                "actor": "${{ github.actor }}" }}'\
+            https://api.github.com/repos/${{ env.repositorio_estado }}/dispatches
+
